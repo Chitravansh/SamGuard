@@ -56,6 +56,7 @@
 import pyshark
 import requests
 import os
+import time
 
 # ML scoring endpoint
 SCORER = os.getenv("SCORER_URL", "http://localhost:5000/score")
@@ -64,27 +65,60 @@ SCORER = os.getenv("SCORER_URL", "http://localhost:5000/score")
 # ---------------------------
 #  AUTO-DETECT NETWORK INTERFACE
 # ---------------------------
-def get_best_interface():
+# def get_best_interface():
+#     interfaces = pyshark.tshark.tshark.get_tshark_interfaces()
+
+#     preferred = ['Wi-Fi', 'Ethernet', 'WLAN', 'Local Area']
+
+#     # Try to match human-readable names
+#     for iface in interfaces:
+#         if any(name.lower() in iface.lower() for name in preferred):
+#             print(f"✔ Auto-selected interface: {iface}")
+#             return iface
+
+#     # Fallback: first Npcap interface (Device\NPF)
+#     for iface in interfaces:
+#         if r"\Device\NPF_" in iface:
+#             print(f"✔ Fallback interface selected: {iface}")
+#             return iface
+
+#     raise RuntimeError("❌ No network interface found!")
+
+
+
+
+def find_active_interface():
+    print("🔍 Detecting active network interface...")
     interfaces = pyshark.tshark.tshark.get_tshark_interfaces()
 
-    preferred = ['Wi-Fi', 'Ethernet', 'WLAN', 'Local Area']
-
-    # Try to match human-readable names
+    print("\nAvailable interfaces:")
     for iface in interfaces:
-        if any(name.lower() in iface.lower() for name in preferred):
-            print(f"✔ Auto-selected interface: {iface}")
-            return iface
+        print(" •", iface)
 
-    # Fallback: first Npcap interface (Device\NPF)
     for iface in interfaces:
-        if r"\Device\NPF_" in iface:
-            print(f"✔ Fallback interface selected: {iface}")
-            return iface
+        try:
+            print(f"\n📡 Testing interface: {iface}")
+            cap = pyshark.LiveCapture(interface=iface)
 
-    raise RuntimeError("❌ No network interface found!")
+            # sniff for 2 seconds
+            cap.sniff(timeout=2)
+
+            if len(cap) > 0:
+                print(f"✔ Active interface detected: {iface}")
+                return iface
+            else:
+                print(f"✖ No traffic on: {iface}")
+
+        except Exception as e:
+            print(f"⚠ Error testing {iface}: {e}")
+
+    raise RuntimeError("❌ No active network interface detected!")
 
 
-INTERFACE = r"\Device\NPF_{073C257D-AC20-49B8-905B-CF285D93A9A7}"
+
+# INTERFACE = r"\Device\NPF_{073C257D-AC20-49B8-905B-CF285D93A9A7}"
+
+INTERFACE = find_active_interface()
 
 
 # ---------------------------
