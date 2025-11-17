@@ -1,0 +1,47 @@
+[
+  {
+    "src_ip": "192.168.1.20",
+    "dst_ip": "185.101.33.10",
+    "bytes_out": 1200000,
+    "bytes_in": 500,
+    "duration": 60,
+    "proto": "TCP",
+    "pkts": 400
+  },
+  {
+    "src_ip": "192.168.1.50",
+    "dst_ip": "8.8.8.8",
+    "bytes_out": 200,
+    "bytes_in": 180,
+    "duration": 2,
+    "proto": "UDP",
+    "pkts": 5
+  },
+  {
+    "src_ip": "192.168.1.99",
+    "dst_ip": "93.184.216.34",
+    "bytes_out": 2000000,
+    "bytes_in": 100,
+    "duration": 120,
+    "proto": "TCP",
+    "pkts": 600
+  },
+  {
+    "src_ip": "192.168.1.77",
+    "dst_ip": "34.98.120.4",
+    "bytes_out": 400,
+    "bytes_in": 500,
+    "duration": 3,
+    "proto": "UDP",
+    "pkts": 10
+  },
+  {
+    "src_ip": "192.168.1.101",
+    "dst_ip": "10.0.0.5",
+    "bytes_out": 50,
+    "bytes_in": 40,
+    "duration": 1,
+    "proto": "TCP",
+    "pkts": 2000
+  }
+]
